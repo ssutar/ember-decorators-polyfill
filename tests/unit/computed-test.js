@@ -224,6 +224,26 @@ module('@computed', function() {
     );
   });
 
+  test('it works with classic classes with `set`', function(assert) {
+    assert.expect(2);
+
+    const Foo = EmberObject.extend({
+      first: 'rob',
+      last: 'jackson',
+
+      init() {
+        this._super(...arguments);
+        this.set('fullName', computed('first', 'last', function() {
+          return `${this.first} ${this.last}`;
+        }));
+      }
+    });
+
+    let obj = Foo.create();
+    let fullName = get(obj, 'fullName');
+    assert.equal(fullName, 'rob jackson', 'fullname is set correctly');
+  });
+
   test('dependent key changes invalidate the computed property', function(assert) {
     class Foo {
       first = 'rob';
